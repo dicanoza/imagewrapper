@@ -3,7 +3,6 @@ package com.newsnow.imagewrapper.api;
 import com.newsnow.imagewrapper.domain.Task;
 import com.newsnow.imagewrapper.service.ResizeImageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,12 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.UUID;
 
 @RestController
@@ -47,7 +41,7 @@ public class ResizeImageController {
     public ResponseEntity<Task> resizeImage(@PathVariable UUID taskid) {
         return resizeImageService.searchTask(taskid)
                 .map(task -> ResponseEntity.ok().body(task))
-                .orElseGet(()-> ResponseEntity.notFound().build());
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
 }

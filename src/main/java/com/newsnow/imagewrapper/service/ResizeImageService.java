@@ -63,7 +63,7 @@ public class ResizeImageService {
 
         transformImage(width, height, oldFile, newFile);
 
-        oldFile.delete();
+        Files.delete(oldFile.toPath());
 
         return taskRepository.create(task);
     }

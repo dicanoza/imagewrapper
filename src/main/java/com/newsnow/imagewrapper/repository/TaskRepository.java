@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 import static com.newsnow.imagewrapper.repository.generated.tables.Task.TASK;
 
@@ -25,7 +24,7 @@ public class TaskRepository {
     }
 
     public List<Task> selectAllTasks() {
-        return dsl.selectFrom(Tables.TASK).stream().map(TaskRecordConverter::asTask).collect(Collectors.toList());
+        return dsl.selectFrom(Tables.TASK).stream().map(TaskRecordConverter::asTask).toList();
     }
 
     public Optional<Task> selectTaskById(UUID taskId) {

@@ -3,20 +3,23 @@ package com.newsnow.imagewrapper.repository;
 import com.newsnow.imagewrapper.domain.Task;
 import com.newsnow.imagewrapper.repository.generated.tables.records.TaskRecord;
 
-import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
 public class TaskRecordConverter {
-    public static com.newsnow.imagewrapper.domain.Task asTask(TaskRecord record) {
+    private TaskRecordConverter() {
+        //nothing
+    }
+
+    public static com.newsnow.imagewrapper.domain.Task asTask(TaskRecord taskRecord) {
         var taskBuilder = new com.newsnow.imagewrapper.domain.Task.TaskBuilder();
 
-        taskBuilder.id(record.getId())
-                .md5(record.getMd5())
-                .url(record.getUrl())
-                .fileName(record.getFilename())
-                .height(record.getHeight())
-                .width(record.getWidth())
-                .created(record.getCreated().toEpochSecond(ZoneOffset.UTC));
+        taskBuilder.id(taskRecord.getId())
+                .md5(taskRecord.getMd5())
+                .url(taskRecord.getUrl())
+                .fileName(taskRecord.getFilename())
+                .height(taskRecord.getHeight())
+                .width(taskRecord.getWidth())
+                .created(taskRecord.getCreated().toEpochSecond(ZoneOffset.UTC));
 
         return taskBuilder.build();
     }
