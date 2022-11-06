@@ -7,6 +7,6 @@ spring:
       max-file-size: 128MB
       max-request-size: 128MB
   datasource:
-    url: jdbc:postgresql://image-wrapper-db:5432/postgres
+    url: jdbc:postgresql://localhost:5431/postgres
     username: user
     password: pass
