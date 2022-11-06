@@ -7,6 +7,7 @@ import org.jooq.DSLContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,6 +40,7 @@ public class TaskRepository {
     public Task create(Task task) {
         TaskRecord taskRecord = TaskRecordConverter.asRecord(task);
         taskRecord.setId(UUID.randomUUID());
+        taskRecord.setCreated(LocalDateTime.now());
         dsl.insertInto(Tables.TASK).set(taskRecord).execute();
         return selectTaskById(taskRecord.getId()).orElseThrow();
     }

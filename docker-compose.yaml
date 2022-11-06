@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  web:
+  server:
     container_name: image-wrapper
     build:
       dockerfile: Dockerfile
@@ -39,3 +39,9 @@ services:
       - db
     depends_on:
       - db
+  web:
+    image: nginx:latest
+    ports:
+      - "80:80"
+    volumes:
+      - .static:/usr/share/nginx/html

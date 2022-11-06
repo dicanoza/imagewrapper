@@ -10,16 +10,16 @@ public class Task {
     private String url;
     private Integer width;
     private Integer height;
-    private Long timestamp;
+    private Long created;
 
-    private Task(UUID id, String md5, String fileName, String url, Integer width, Integer height, Long timestamp) {
+    private Task(UUID id, String md5, String fileName, String url, Integer width, Integer height, Long created) {
         this.id = id;
         this.md5 = md5;
         this.fileName = fileName;
         this.url = url;
         this.width = width;
         this.height = height;
-        this.timestamp = timestamp;
+        this.created = created;
     }
 
     public String getFileName() {
@@ -62,12 +62,12 @@ public class Task {
         this.height = height;
     }
 
-    public Long getTimestamp() {
-        return timestamp;
+    public Long getCreated() {
+        return created;
     }
 
-    public void setTimestamp(Long timestamp) {
-        this.timestamp = timestamp;
+    public void setCreated(Long created) {
+        this.created = created;
     }
 
     public UUID getId() {
@@ -83,12 +83,12 @@ public class Task {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Task task = (Task) o;
-        return Objects.equals(id, task.id) && Objects.equals(md5, task.md5) && Objects.equals(fileName, task.fileName) && Objects.equals(url, task.url) && Objects.equals(width, task.width) && Objects.equals(height, task.height) && Objects.equals(timestamp, task.timestamp);
+        return Objects.equals(id, task.id) && Objects.equals(md5, task.md5) && Objects.equals(fileName, task.fileName) && Objects.equals(url, task.url) && Objects.equals(width, task.width) && Objects.equals(height, task.height) && Objects.equals(created, task.created);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, md5, fileName, url, width, height, timestamp);
+        return Objects.hash(id, md5, fileName, url, width, height, created);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class Task {
                 ", url='" + url + '\'' +
                 ", width=" + width +
                 ", height=" + height +
-                ", timestamp=" + timestamp +
+                ", timestamp=" + created +
                 '}';
     }
 
@@ -112,7 +112,7 @@ public class Task {
         private String url;
         private Integer width;
         private Integer height;
-        private Long timestamp;
+        private Long created;
 
         public TaskBuilder md5(String md5) {
             this.md5 = md5;
@@ -139,8 +139,8 @@ public class Task {
             return this;
         }
 
-        public TaskBuilder timestamp(Long timestamp) {
-            this.timestamp = timestamp;
+        public TaskBuilder created(Long created) {
+            this.created = created;
             return this;
         }
 
@@ -150,7 +150,7 @@ public class Task {
         }
 
         public Task build() {
-            return new Task(id, md5, fileName, url, width, height, timestamp);
+            return new Task(id, md5, fileName, url, width, height, created);
         }
     }
 

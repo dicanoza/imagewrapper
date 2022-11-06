@@ -14,11 +14,11 @@ import java.util.function.Function;
 
 import org.jooq.Field;
 import org.jooq.ForeignKey;
-import org.jooq.Function6;
+import org.jooq.Function7;
 import org.jooq.Name;
 import org.jooq.Record;
 import org.jooq.Records;
-import org.jooq.Row6;
+import org.jooq.Row7;
 import org.jooq.Schema;
 import org.jooq.SelectField;
 import org.jooq.Table;
@@ -65,6 +65,11 @@ public class Task extends TableImpl<TaskRecord> {
      * The column <code>public.task.filename</code>.
      */
     public final TableField<TaskRecord, String> FILENAME = createField(DSL.name("filename"), SQLDataType.VARCHAR(50), this, "");
+
+    /**
+     * The column <code>public.task.url</code>.
+     */
+    public final TableField<TaskRecord, String> URL = createField(DSL.name("url"), SQLDataType.VARCHAR(100), this, "");
 
     /**
      * The column <code>public.task.width</code>.
@@ -164,18 +169,18 @@ public class Task extends TableImpl<TaskRecord> {
     }
 
     // -------------------------------------------------------------------------
-    // Row6 type methods
+    // Row7 type methods
     // -------------------------------------------------------------------------
 
     @Override
-    public Row6<UUID, String, String, Integer, Integer, LocalDateTime> fieldsRow() {
-        return (Row6) super.fieldsRow();
+    public Row7<UUID, String, String, String, Integer, Integer, LocalDateTime> fieldsRow() {
+        return (Row7) super.fieldsRow();
     }
 
     /**
      * Convenience mapping calling {@link SelectField#convertFrom(Function)}.
      */
-    public <U> SelectField<U> mapping(Function6<? super UUID, ? super String, ? super String, ? super Integer, ? super Integer, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Function7<? super UUID, ? super String, ? super String, ? super String, ? super Integer, ? super Integer, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(Records.mapping(from));
     }
 
@@ -183,7 +188,7 @@ public class Task extends TableImpl<TaskRecord> {
      * Convenience mapping calling {@link SelectField#convertFrom(Class,
      * Function)}.
      */
-    public <U> SelectField<U> mapping(Class<U> toType, Function6<? super UUID, ? super String, ? super String, ? super Integer, ? super Integer, ? super LocalDateTime, ? extends U> from) {
+    public <U> SelectField<U> mapping(Class<U> toType, Function7<? super UUID, ? super String, ? super String, ? super String, ? super Integer, ? super Integer, ? super LocalDateTime, ? extends U> from) {
         return convertFrom(toType, Records.mapping(from));
     }
 }
