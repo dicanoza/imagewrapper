@@ -5,12 +5,12 @@ services:
     build:
       dockerfile: Dockerfile
     image: image-wrapper:latest
+    environment:
+      - DB_URL=jdbc:postgresql://image-wrapper-db:5432/postgres?user=user&password=pass
     ports:
       - "8080:8080"
-    environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=pass
-      - POSTGRES_DB=postgress
+    volumes:
+      - .static/:/.static
     depends_on:
       - migration
     links:

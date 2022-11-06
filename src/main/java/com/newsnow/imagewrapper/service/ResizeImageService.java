@@ -3,18 +3,24 @@ package com.newsnow.imagewrapper.service;
 import com.newsnow.imagewrapper.domain.Task;
 import com.newsnow.imagewrapper.repository.TaskRepository;
 import net.coobird.thumbnailator.Thumbnails;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
+
+import static org.apache.commons.codec.digest.DigestUtils.md5Hex;
 
 @Service
 public class ResizeImageService {
@@ -22,9 +28,10 @@ public class ResizeImageService {
     @Autowired
     private TaskRepository taskRepository;
     @Value("${baseUrl}")
-    String baseUrl = "";
+    private String baseUrl;
     @Value("${basePath}")
-    String basePath = "";
+    private String basePath;
+
     public BufferedImage resizeBlocking(InputStream inputStream, Integer width, Integer height) throws IOException {
 
         Objects.requireNonNull(inputStream);
@@ -38,35 +45,38 @@ public class ResizeImageService {
                 .asBufferedImage();
 
     }
-    public Task resizeTask(InputStream inputStream,String imageName, Integer width, Integer height) throws IOException {
+
+    public Task resizeTask(InputStream inputStream, String imageName, Integer width, Integer height) throws IOException {
         Path baseFolder = Path.of(basePath);
         var newName = imageName + "-" + width + "-" + height + ".png";
         var url = baseUrl + newName;
-        Task task = new Task.TaskBuilder()
-                .url(url)
-                .width(width)
-                .height(height)
-                .fileName(newName)
-                .md5("asdfasdfas").build();
+
+        File oldFile = new File(baseFolder.toAbsolutePath() + File.separator + "tmp" + File.separator + imageName);
+        File newFile = new File(baseFolder.toAbsolutePath() + File.separator + newName);
+
+        Files.copy(
+                inputStream,
+                oldFile.toPath(),
+                StandardCopyOption.REPLACE_EXISTING);
+        IOUtils.closeQuietly(inputStream);
+
+        try (InputStream secondStream = new FileInputStream(oldFile)) {
+            Task task = new Task.TaskBuilder()
+                    .url(url)
+                    .width(width)
+                    .height(height)
+                    .fileName(newName)
+                    .md5(md5Hex(secondStream)).build();
 
 
-        File file = new File(baseFolder.toAbsolutePath() + File.separator + newName);
+            Thumbnails.of(oldFile)
+                    .size(width, height)
+                    .keepAspectRatio(false)
+                    .outputFormat("png")
+                    .toFile(newFile);
 
-        Thumbnails.of(inputStream)
-                .size(width, height)
-                .keepAspectRatio(false)
-                .outputFormat("png")
-                .toFile(file);
-
-        return taskRepository.create(task);
-    }
-
-    private String calculateMd5(InputStream inputStream){
-//        byte[] bytesOfMessage = yourString.getBytes("UTF-8");
-//
-//        MessageDigest md = MessageDigest.getInstance("MD5");
-//        byte[] theMD5digest = md.digest(bytesOfMessage);
-        return null;
+            return taskRepository.create(task);
+        }
     }
 
     public Optional<Task> searchTask(UUID taskid) {

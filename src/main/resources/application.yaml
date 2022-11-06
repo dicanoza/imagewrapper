@@ -7,7 +7,7 @@ spring:
       max-file-size: 128MB
       max-request-size: 128MB
   datasource:
-    url: jdbc:postgresql://localhost:5431/postgres
+    url: ${DB_URL}
     username: user
     password: pass
   liquibase:
