@@ -1,10 +1,13 @@
 package com.newsnow.imagewrapper.api;
 
+import com.newsnow.imagewrapper.domain.Task;
 import com.newsnow.imagewrapper.service.ResizeImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +19,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.UUID;
 
 @RestController
 public class ResizeImageController {
@@ -26,7 +30,7 @@ public class ResizeImageController {
         this.resizeImageService = resizeImageService;
     }
 
-    @PostMapping(path = "/task", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
+//    @PostMapping(path = "/task", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<InputStreamResource> resize(@RequestParam MultipartFile image,
                                                       @RequestParam Integer width,
                                                       @RequestParam Integer height) throws IOException {
@@ -45,6 +49,26 @@ public class ResizeImageController {
         return ResponseEntity.ok()
                 .contentType(contentType)
                 .body(new InputStreamResource(inputStream));
+    }
+
+    @PostMapping(path = "/task", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Task> resizeImage(@RequestParam MultipartFile image,
+                                            @RequestParam Integer width,
+                                            @RequestParam Integer height) throws IOException {
+
+        return ResponseEntity.ok()
+                .body(resizeImageService.resizeTask(
+                        image.getInputStream(),
+                        image.getName(),
+                        width,
+                        height));
+    }
+
+    @GetMapping(path = "/task/{taskid}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Task> resizeImage(@PathVariable UUID taskid) {
+        return resizeImageService.searchTask(taskid)
+                .map(task -> ResponseEntity.ok().body(task))
+                .orElseGet(()-> ResponseEntity.notFound().build());
     }
 
 }
