@@ -1,6 +1,5 @@
 package com.newsnow.imagewrapper.service
 
-
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
@@ -9,8 +8,6 @@ import org.junit.jupiter.api.assertThrows
 import java.io.FileInputStream
 import java.lang.IllegalArgumentException
 import java.nio.file.Path
-import javax.imageio.ImageIO
-import kotlin.io.path.name
 
 class ResizeImageServiceTest {
 
@@ -20,14 +17,12 @@ class ResizeImageServiceTest {
     lateinit var mediumImage: Path
     lateinit var largeImage: Path
 
-
     @BeforeEach
     fun init() {
         serviceUnderTest = ResizeImageService()
         smallImage = Path.of(this.javaClass.classLoader.getResource("small.jpg")!!.toURI())
         mediumImage = Path.of(this.javaClass.classLoader.getResource("medium.jpg")!!.toURI())
         largeImage = Path.of(this.javaClass.classLoader.getResource("large.png")!!.toURI())
-
     }
 
     @Test
@@ -92,9 +87,6 @@ class ResizeImageServiceTest {
             assertNotNull(image)
             assertEquals(h, image.height)
             assertEquals(w, image.width)
-
         }
-
     }
-
 }

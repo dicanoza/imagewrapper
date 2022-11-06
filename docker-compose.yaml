@@ -33,7 +33,7 @@ services:
     command: [ "sh", "/script/wait-for-postgress.sh",
                "sh", "/script/liquibase-migrate.sh"]
     volumes:
-      - ./database/sql/liquibase/changelog:/liquibase/changelog
+      - ./src/main/resources/changelog:/liquibase/changelog
       - ./database/script:/script
     links:
       - db
