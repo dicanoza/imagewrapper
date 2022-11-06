@@ -5,10 +5,14 @@
 
 To run the project locally its important to configure Docker and Maven. 
 
-By running docker-compose the service will build all the images needed, and a demo version will start to run.
+By compiling the application then running docker-compose the service will build all the images needed, and a demo version will start to run.
 ``` 
+mvn clean install 
 docker-compose up
 ```
+
+Inside Docker will be running a Postgres instance to store the Tasks, a Ngix to serve the resized images and the Spring webserver.
+
 
 ### POST /task
 
