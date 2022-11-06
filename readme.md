@@ -88,3 +88,9 @@ you can delete the `.postgres-data` folder and execute the docker system prune c
 To run using IDE you need to set the environment var
 
 `DB_URL=jdbc:postgresql://localhost:5431/postgres`
+
+### Future
+Unfortunately I didn't have time to evolve the PoC to be fully non-blocking. 
+The current implementation will show some issues under load.
+
+Some scenarios are not fully tested as well.
