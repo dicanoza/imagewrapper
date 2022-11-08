@@ -12,12 +12,12 @@ import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.core.io.ClassPathResource
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.HttpStatus.NOT_FOUND
 import org.springframework.http.HttpStatus.OK
 import org.springframework.http.MediaType
 import org.springframework.util.LinkedMultiValueMap
 import java.util.UUID.randomUUID
-
 
 class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
 
@@ -43,7 +43,6 @@ class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
 
     @Test
     fun `should process image correctly post endpoint`() {
-
         val parameters = LinkedMultiValueMap<String, Any>()
         parameters.add("image", smallImage)
         parameters.add("height", 10)
@@ -53,10 +52,8 @@ class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
         headers.contentType = MediaType.MULTIPART_FORM_DATA
         val entity = HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers)
 
-
         val response =
             restTemplate.postForEntity(/* url = */ "http://localhost:$port/task", entity, Task::class.java)
-
 
         assertEquals(OK, response.statusCode)
         assertNotNull(response.body)
@@ -68,18 +65,75 @@ class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
+    fun `should return the same image if tried to insert it twice`() {
+        val parameters = LinkedMultiValueMap<String, Any>()
+        parameters.add("image", smallImage)
+        parameters.add("height", 10)
+        parameters.add("width", 100)
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        val entity = HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers)
+
+        val response1 =
+            restTemplate.postForEntity(/* url = */ "http://localhost:$port/task", entity, Task::class.java)
+        val response2 = restTemplate.postForEntity(/* url = */ "http://localhost:$port/task", entity, Task::class.java)
+
+        assertEquals(OK, response1.statusCode)
+        assertNotNull(response1.body)
+        assertEquals(OK, response2.statusCode)
+        assertNotNull(response2.body)
+
+        assertEquals(response2.body, response1.body)
+    }
+
+    @Test
     fun `should return 400 if no image is provided`() {
+        val parameters = LinkedMultiValueMap<String, Any>()
+        parameters.add("height", 10)
+        parameters.add("width", 100)
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        val entity = HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers)
+
+        val response =
+            restTemplate.postForEntity(/* url = */ "http://localhost:$port/task", entity, Task::class.java)
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
 
     @Test
     fun `should return 400 if height is over 2160`() {
+        val parameters = LinkedMultiValueMap<String, Any>()
+        parameters.add("image", smallImage)
+        parameters.add("height", 10)
+        parameters.add("width", 2161)
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        val entity = HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers)
+
+        val response =
+            restTemplate.postForEntity(/* url = */ "http://localhost:$port/task", entity, Task::class.java)
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
 
     @Test
     fun `should return 400 if width is over 3840`() {
-    }
+        val parameters = LinkedMultiValueMap<String, Any>()
+        parameters.add("image", smallImage)
+        parameters.add("height", 3841)
+        parameters.add("width", 30)
 
-    @Test
-    fun `Image url should provide a proper image`() {
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        val entity = HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers)
+
+        val response =
+            restTemplate.postForEntity(/* url = */ "http://localhost:$port/task", entity, Task::class.java)
+
+        assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
 }

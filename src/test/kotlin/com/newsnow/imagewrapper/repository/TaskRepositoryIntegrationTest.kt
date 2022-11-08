@@ -64,9 +64,9 @@ class TaskRepositoryIntegrationTest : AbstractIntegrationTest() {
         assertEquals(task.toString(), inserted.toString())
         assertEquals(task, inserted)
     }
-    @Test
-    fun `find by md5 height and width`(){
 
+    @Test
+    fun `find by md5 height and width`() {
         val task = TaskBuilder()
             .id(UUID.randomUUID())
             .fileName("filename")
@@ -82,6 +82,9 @@ class TaskRepositoryIntegrationTest : AbstractIntegrationTest() {
 
         assertTrue(selected.isPresent)
         assertEquals(inserted.url, selected.get().url)
+        assertEquals(inserted.height, selected.get().height)
+        assertEquals(inserted.width, selected.get().width)
+        assertEquals(inserted.fileName, selected.get().fileName)
     }
 
     @AfterEach
