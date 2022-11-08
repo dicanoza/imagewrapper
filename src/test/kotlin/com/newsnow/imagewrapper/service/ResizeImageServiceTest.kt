@@ -1,7 +1,6 @@
 package com.newsnow.imagewrapper.service
 
 import com.newsnow.imagewrapper.domain.Task
-
 import com.newsnow.imagewrapper.repository.TaskRepository
 import io.mockk.every
 import io.mockk.mockk
@@ -154,4 +153,5 @@ class ResizeImageServiceTest {
         assertEquals(serviceUnderTest.getMd5(largeImage.toFile()), serviceUnderTest.getMd5(largeImage.toFile()))
         assertEquals(serviceUnderTest.getMd5(mediumImage.toFile()), serviceUnderTest.getMd5(mediumImage.toFile()))
     }
+
 }

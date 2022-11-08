@@ -8,10 +8,12 @@ import org.junit.Ignore
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.time.LocalDateTime
 import java.time.ZoneOffset
+import java.util.UUID
 
 class TaskRepositoryIntegrationTest : AbstractIntegrationTest() {
 
@@ -61,6 +63,25 @@ class TaskRepositoryIntegrationTest : AbstractIntegrationTest() {
 
         assertEquals(task.toString(), inserted.toString())
         assertEquals(task, inserted)
+    }
+    @Test
+    fun `find by md5 height and width`(){
+
+        val task = TaskBuilder()
+            .id(UUID.randomUUID())
+            .fileName("filename")
+            .height(10)
+            .width(10)
+            .md5("asdfasdfasdfasdf")
+            .url("http://localhost:8080/task/someimage.gif").build()
+
+        val inserted = taskRepository.create(task)
+
+        val selected =
+            taskRepository.selectTaskByMd5AndWidthHeight(inserted.md5, inserted.width, inserted.height)
+
+        assertTrue(selected.isPresent)
+        assertEquals(inserted.url, selected.get().url)
     }
 
     @AfterEach
