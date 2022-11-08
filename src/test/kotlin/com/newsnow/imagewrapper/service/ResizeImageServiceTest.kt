@@ -1,18 +1,16 @@
 package com.newsnow.imagewrapper.service
 
 import com.newsnow.imagewrapper.domain.Task
-import com.newsnow.imagewrapper.domain.Task.TaskBuilder
+
 import com.newsnow.imagewrapper.repository.TaskRepository
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
-import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.any
-import org.mockito.Mockito.`when`
 import java.io.FileInputStream
 import java.nio.file.Path
 
@@ -40,38 +38,40 @@ class ResizeImageServiceTest {
 
     @Test
     fun `should resize multiple images at the same time correctly`() {
-        every {taskRepository.create(any())}.answers { Task.TaskBuilder().build() }
+        every { taskRepository.create(any()) }.answers { Task.TaskBuilder().build() }
 
         val w = 30
         val h = 100
 
         val small = serviceUnderTest.resizeTask(
-            /* inputStream = */ FileInputStream(smallImage.toFile()), "image.png",
+            /* inputStream = */ FileInputStream(smallImage.toFile()),
+            "image.png",
             /* width = */ w,
             /* height = */ h
         )
 
         val medium = serviceUnderTest.resizeTask(
-            /* inputStream = */ FileInputStream(smallImage.toFile()), "image.png",
+            /* inputStream = */ FileInputStream(smallImage.toFile()),
+            "image.png",
             /* width = */ w,
             /* height = */ h
         )
 
         val large = serviceUnderTest.resizeTask(
-            /* inputStream = */ FileInputStream(smallImage.toFile()), "image.png",
+            /* inputStream = */ FileInputStream(smallImage.toFile()),
+            "image.png",
             /* width = */ w,
             /* height = */ h
         )
         verify {
-            taskRepository.create(withArg {
-                assertEquals(h, it.height)
-                assertEquals(w, it.width)
-            }
+            taskRepository.create(
+                withArg {
+                    assertEquals(h, it.height)
+                    assertEquals(w, it.width)
+                }
             )
         }
-
     }
-
 
     @Test
     fun `should throw exception if dimension overflows`() {

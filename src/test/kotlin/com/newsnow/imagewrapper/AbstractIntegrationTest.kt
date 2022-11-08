@@ -1,13 +1,7 @@
 package com.newsnow.imagewrapper
 
-import com.github.dockerjava.api.model.ExposedPort
-import com.github.dockerjava.api.model.HostConfig
-import com.github.dockerjava.api.model.PortBinding
-import com.github.dockerjava.api.model.Ports
-import liquibase.integration.spring.SpringLiquibase
 import org.junit.ClassRule
 import org.junit.jupiter.api.AfterAll
-import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.test.annotation.DirtiesContext
@@ -18,7 +12,7 @@ import org.testcontainers.containers.PostgreSQLContainer
 
 @SpringBootTest
 @ExtendWith(SpringExtension::class)
-@DirtiesContext(classMode  = DirtiesContext.ClassMode.BEFORE_CLASS)
+@DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_CLASS)
 class AbstractIntegrationTest {
 
     companion object {
@@ -38,13 +32,10 @@ class AbstractIntegrationTest {
             registry.add("spring.datasource.url", postgreSQLContainer::getJdbcUrl)
         }
 
-
-
         @AfterAll
         @JvmStatic
         fun destroy() {
             postgreSQLContainer.stop()
         }
     }
-
 }
