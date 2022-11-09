@@ -2,6 +2,7 @@ package com.newsnow.imagewrapper.api
 
 import com.newsnow.imagewrapper.AbstractIntegrationTest
 import com.newsnow.imagewrapper.domain.Task
+import com.newsnow.imagewrapper.domain.TaskList
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -136,4 +137,26 @@ class ResizeImageControllerIntegrationTest : AbstractIntegrationTest() {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.statusCode)
     }
+
+    @Test
+    fun `should get all All tasks`() {
+        val parameters = LinkedMultiValueMap<String, Any>()
+        parameters.add("image", smallImage)
+        parameters.add("height", 10)
+        parameters.add("width", 100)
+
+        val headers = HttpHeaders()
+        headers.contentType = MediaType.MULTIPART_FORM_DATA
+        restTemplate.postForEntity(/* url = */ "http://localhost:$port/task",
+                HttpEntity<LinkedMultiValueMap<String, Any>>(parameters, headers),
+                Task::class.java)
+
+        val response =
+            restTemplate.getForEntity(/* url = */ "http://localhost:$port/taskList", TaskList::class.java)
+
+        assertEquals(HttpStatus.OK, response.statusCode)
+        assertNotNull(response.body)
+        assertEquals(1, response.body!!.tasks.size)
+    }
+
 }
